@@ -43,26 +43,29 @@
   :group 'zoom)
 
 (defcustom zoom-ignored-major-modes nil
-  "List of major modes for which the selected window will not zoom."
+  "List of major modes for which the selected window should not
+be enlarged (but only balanced)."
   :type '(repeat symbol)
   :group 'zoom)
 
 (defcustom zoom-ignored-buffer-names nil
-  "List of buffer names for which the selected window will not zoom."
+  "List of buffer names for which the selected window should not
+be enlarged (but only balanced)."
   :type '(repeat string)
   :group 'zoom)
 
 (defcustom zoom-ignored-buffer-name-regexps nil
-  "List of buffer name regexps for which the selected window will not zoom."
+  "List of buffer name regexps for which the selected window
+should not be enlarged (but only balanced)."
   :type '(repeat regexp)
   :group 'zoom)
 
 (defcustom zoom-ignore-predicates nil
-  "List of functions that will be called (in order) to decide
-whether the selected window should be ignored or not. These
-functions take no parameter and as soon as one function returns a
-non-nil value the selected window is ignored and the others are
-not called."
+  "List of functions that are called (in order) to decide whether
+the selected window should be ignored or not. These functions
+take no parameters and as soon as one function returns a non-nil
+value the selected window is ignored and the others are not
+called."
   :type '(repeat function)
   :group 'zoom)
 
