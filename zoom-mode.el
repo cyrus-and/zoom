@@ -26,7 +26,6 @@
 ;; and automatic balanced layout where the currently selected window is enlarged
 ;; according to `zoom-min-width' and `zoom-min-height'.
 
-;; TODO avoid call update too often? (https://github.com/roman/golden-ratio.el/issues/57)
 ;; TODO allow to exclude major modes and buffer names?
 
 ;;; Code:
