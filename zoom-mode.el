@@ -101,8 +101,8 @@ are not called."
        (when (funcall predicate)
          (throw 'ignored t))))))
 
-(defun zoom--resize (horizontal)
-  "Resize the selected window according to the user preference.
+(defun zoom--resize-one-side (horizontal)
+  "Resize one dimension of the selected window according to the user preference.
 Argument HORIZONTAL determines whether the window should be
 resized horizontally or vertically."
   (let* ((size-hint
@@ -121,6 +121,19 @@ resized horizontally or vertically."
     ;; actually resize the window
     (window-resize nil delta horizontal)))
 
+(defun zoom--resize ()
+  "Resize the selected window according to the user preference."
+  (zoom--resize-one-side t)
+  (zoom--resize-one-side nil))
+
+(defun zoom--fix-scroll ()
+  "Fix the horizontal scrolling if needed."
+  ;; scroll all the way to the left border (if the window is wide enough to
+  ;; contain it) otherwise scroll to center the point
+  (scroll-right (window-hscroll))
+  (when (> (current-column) (- (window-total-width) hscroll-margin))
+    (scroll-left (- (current-column) (/ (window-total-width) 2)))))
+
 (defun zoom--update ()
   "Update the window layout in the current frame."
   ;; temporarily disables this mode during resize to avoid infinite recursion
@@ -132,14 +145,8 @@ resized horizontally or vertically."
     (balance-windows)
     ;; check if the selected window is not ignored
     (unless (zoom--window-ignored-p)
-      ;; resize the selected window
-      (zoom--resize t)
-      (zoom--resize nil)
-      ;; scroll all the way to the left border (if the window is wide enough to
-      ;; contain it) otherwise scroll to center the point
-      (scroll-right (window-hscroll))
-      (when (> (current-column) (- (window-total-width) hscroll-margin))
-        (scroll-left (- (current-column) (/ (window-total-width) 2)))))))
+      (zoom--resize)
+      (zoom--fix-scroll))))
 
 (defun zoom--hook-handler (&rest arguments)
   "Handle an update event.
