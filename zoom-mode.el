@@ -33,35 +33,35 @@
   :group 'windows)
 
 (defcustom zoom-min-width 80
-  "Minimum width of the focused window in columns."
+  "Minimum width of the selected window in columns."
   :type 'integer
   :group 'zoom)
 
 (defcustom zoom-min-height 24
-  "Minimum height of the focused window in rows."
+  "Minimum height of the selected window in rows."
   :type 'integer
   :group 'zoom)
 
 (defcustom zoom-ignored-major-modes nil
-  "List of major modes for which the focused window will not zoom."
+  "List of major modes for which the selected window will not zoom."
   :type '(repeat symbol)
   :group 'zoom)
 
 (defcustom zoom-ignored-buffer-names nil
-  "List of buffer names for which the focused window will not zoom."
+  "List of buffer names for which the selected window will not zoom."
   :type '(repeat string)
   :group 'zoom)
 
 (defcustom zoom-ignored-buffer-name-regexps nil
-  "List of buffer name regexps for which the focused window will not zoom."
+  "List of buffer name regexps for which the selected window will not zoom."
   :type '(repeat regexp)
   :group 'zoom)
 
 (defcustom zoom-ignore-predicates nil
   "List of functions that will be called (in order) to decide
-whether the focused window should be ignored or not. These
+whether the selected window should be ignored or not. These
 functions take no parameter and as soon as one function returns a
-non-nil value the focused window is ignored and the others are
+non-nil value the selected window is ignored and the others are
 not called."
   :type '(repeat function)
   :group 'zoom)
@@ -76,7 +76,7 @@ not called."
     (zoom--update)))
 
 (defun zoom--window-ignored-p ()
-  "Check whether the focused window will be ignored or not."
+  "Check whether the selected window will be ignored or not."
   (or
    ;; check against the major mode
    (member major-mode zoom-ignored-major-modes)
@@ -97,14 +97,14 @@ not called."
   "Update the window layout in the current frame."
   ;; temporarily disables this mode during resize to avoid infinite recursion
   ;; and enable `window-combination-resize' too ensure that other windows are
-  ;; resized nicely after resizing the focused one
+  ;; resized nicely after resizing the selected one
   (let ((zoom-mode nil)
         (window-combination-resize t))
     ;; start from a balanced layout anyway
     (balance-windows)
-    ;; check if the focused window is not ignored
+    ;; check if the selected window is not ignored
     (unless (zoom--window-ignored-p)
-      ;; resize the focused window
+      ;; resize the selected window
       (let ((delta-width (max (- zoom-min-width (window-total-width)) 0))
             (delta-height (max (- zoom-min-height (window-total-height)) 0)))
         ;; fall back to the maximum available if the windows are too small
