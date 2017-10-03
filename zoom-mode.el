@@ -27,7 +27,6 @@
 ;; according to `zoom-min-width' and `zoom-min-height'.
 
 ;; TODO avoid call update too often? (https://github.com/roman/golden-ratio.el/issues/57)
-;; TODO catch frame resize and update
 ;; TODO allow to exclude major modes and buffer names?
 
 ;;; Code:
@@ -86,6 +85,7 @@
 
 (defun zoom--register ()
   "Enable hooks and advices and update the layout."
+  (add-hook 'focus-in-hook 'zoom--hook-handler)
   (add-hook 'window-configuration-change-hook 'zoom--hook-handler)
   (advice-add 'select-window :after 'zoom--hook-handler)
   ;; update the layout once loaded
@@ -95,6 +95,7 @@
 
 (defun zoom--deregister ()
   "Disable hooks and advices and evenly balance the windows."
+  (remove-hook 'focus-in-hook 'zoom--hook-handler)
   (remove-hook 'window-configuration-change-hook 'zoom--hook-handler)
   (advice-remove 'select-window 'zoom--hook-handler)
   ;; leave with a clean layout
