@@ -26,8 +26,6 @@
 ;; and automatic balanced layout where the currently selected window is enlarged
 ;; according to `zoom-min-width' and `zoom-min-height'.
 
-;; TODO allow to exclude major modes and buffer names?
-
 ;;; Code:
 
 (defgroup zoom nil
@@ -44,6 +42,30 @@
   :type 'integer
   :group 'zoom)
 
+(defcustom zoom-ignored-major-modes nil
+  "List of major modes for which the focused window will not zoom."
+  :type '(repeat symbol)
+  :group 'zoom)
+
+(defcustom zoom-ignored-buffer-names nil
+  "List of buffer names for which the focused window will not zoom."
+  :type '(repeat string)
+  :group 'zoom)
+
+(defcustom zoom-ignored-buffer-name-regexps nil
+  "List of buffer name regexps for which the focused window will not zoom."
+  :type '(repeat regexp)
+  :group 'zoom)
+
+(defcustom zoom-ignore-predicates nil
+  "List of functions that will be called (in order) to decide
+whether the focused window should be ignored or not. These
+functions take no parameter and as soon as one function returns a
+non-nil value the focused window is ignored and the others are
+not called."
+  :type '(repeat function)
+  :group 'zoom)
+
 ;;;###autoload
 (defun zoom ()
   "Zoom the current window and balance the others."
@@ -53,6 +75,24 @@
       (message "Window zooming is automatic (M-x zoom-mode to disable)")
     (zoom--update)))
 
+(defun zoom--window-ignored-p ()
+  "Check whether the focused window will be ignored or not."
+  (or
+   ;; check against the major mode
+   (member major-mode zoom-ignored-major-modes)
+   ;; check against the buffer name
+   (member (buffer-name) zoom-ignored-buffer-names)
+   ;; check against the buffer name (using a regexp)
+   (catch 'ignored
+     (dolist (regex zoom-ignored-buffer-name-regexps)
+       (when (string-match regex (buffer-name))
+         (throw 'ignored t))))
+   ;; check user-defined predicates
+   (catch 'ignored
+     (dolist (predicate zoom-ignore-predicates)
+       (when (funcall predicate)
+         (throw 'ignored t))))))
+
 (defun zoom--update ()
   "Update the window layout in the current frame."
   ;; temporarily disables this mode during resize to avoid infinite recursion
@@ -60,19 +100,21 @@
   ;; resized nicely after resizing the focused one
   (let ((zoom-mode nil)
         (window-combination-resize t))
-    ;; start from a balanced layout
+    ;; start from a balanced layout anyway
     (balance-windows)
-    ;; then resize the focused window
-    (let ((delta-width (max (- zoom-min-width (window-total-width)) 0))
-          (delta-height (max (- zoom-min-height (window-total-height)) 0)))
-      ;; fall back to the maximum available if the windows are too small
-      (window-resize nil (window-resizable nil delta-width t) t)
-      (window-resize nil (window-resizable nil delta-height nil) nil))
-    ;; scroll all the way to the left border (if the window is wide enough to
-    ;; contain it) otherwise scroll to center the point
-    (scroll-right (window-hscroll))
-    (when (> (current-column) (- (window-total-width) hscroll-margin))
-      (scroll-left (- (current-column) (/ (window-total-width) 2))))))
+    ;; check if the focused window is not ignored
+    (unless (zoom--window-ignored-p)
+      ;; resize the focused window
+      (let ((delta-width (max (- zoom-min-width (window-total-width)) 0))
+            (delta-height (max (- zoom-min-height (window-total-height)) 0)))
+        ;; fall back to the maximum available if the windows are too small
+        (window-resize nil (window-resizable nil delta-width t) t)
+        (window-resize nil (window-resizable nil delta-height nil) nil))
+      ;; scroll all the way to the left border (if the window is wide enough to
+      ;; contain it) otherwise scroll to center the point
+      (scroll-right (window-hscroll))
+      (when (> (current-column) (- (window-total-width) hscroll-margin))
+        (scroll-left (- (current-column) (/ (window-total-width) 2)))))))
 
 (defun zoom--hook-handler (&rest ignore)
   "Handle an update event."
