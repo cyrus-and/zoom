@@ -71,8 +71,8 @@
     ;; scroll all the way to the left border (if the window is wide enough to
     ;; contain it) otherwise scroll to center the point
     (scroll-right (window-hscroll))
-    (if (> (current-column) (- (window-total-width) hscroll-margin))
-        (scroll-left (- (current-column) (/ (window-total-width) 2))))))
+    (when (> (current-column) (- (window-total-width) hscroll-margin))
+      (scroll-left (- (current-column) (/ (window-total-width) 2))))))
 
 (defun zoom--hook-handler (&rest ignore)
   "Handle an update event."
