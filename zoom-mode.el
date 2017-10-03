@@ -32,6 +32,10 @@
 
 ;;; Code:
 
+(defgroup zoom nil
+  "Enforce a fixed and automatic balanced window layout."
+  :group 'windows)
+
 (defcustom zoom-min-width 80
   "Minimum width of the focused window in columns."
   :group 'zoom)
