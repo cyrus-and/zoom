@@ -23,8 +23,9 @@
 ;;; Commentary:
 
 ;; This minor mode takes care of managing the window sizes by enforcing a fixed
-;; and automatic balanced layout where the currently selected window is enlarged
-;; according to `zoom-min-width' and `zoom-min-height'.
+;; and automatic balanced layout where the currently selected window is resized
+;; according to `zoom-size' which can be either an absolute value in
+;; rows/columns or a ratio between the selected window and frame size.
 
 ;;; Code:
 
@@ -32,14 +33,14 @@
   "Enforce a fixed and automatic balanced window layout."
   :group 'windows)
 
-(defcustom zoom-min-width 80
-  "Minimum width of the selected window in columns or width ratio."
-  :type 'number
-  :group 'zoom)
-
-(defcustom zoom-min-height 24
-  "Minimum height of the selected window in rows or height ratio."
-  :type 'number
+(defcustom zoom-size '(80 . 24)
+  "Size hint for the selected window.
+Each component can be either an absolute value in rows/columns or
+a ratio between the selected window and the frame size."
+  :type '(cons (choice (integer :tag "Columns")
+                       (float :tag "Width ratio"))
+               (choice (integer :tag "Rows")
+                       (float :tag "Height ratio")))
   :group 'zoom)
 
 (defcustom zoom-ignored-major-modes nil
@@ -105,7 +106,7 @@ are not called."
 Argument HORIZONTAL determines whether the window should be
 resized horizontally or vertically."
   (let* ((size-hint
-          (if horizontal zoom-min-width zoom-min-height))
+          (if horizontal (car zoom-size) (cdr zoom-size)))
          (window-size
           (if horizontal (window-total-width) (window-total-height)))
          (frame-size

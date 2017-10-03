@@ -2,8 +2,9 @@ Zoom
 ====
 
 This minor mode takes care of managing the window sizes by enforcing a fixed and
-automatic balanced layout where the currently selected window is enlarged
-according to `zoom-min-width` and `zoom-min-height`
+automatic balanced layout where the currently selected window is resized
+according to `zoom-size` which can be either an absolute value in rows/columns
+or a ratio between the selected window and frame size.
 
 TODO screencast
 
@@ -35,8 +36,7 @@ the focused window size to 90 columns and 30 rows:
 ```el
 (custom-set-variables
  '(zoom-mode t)
- '(zoom-min-width 90)
- '(zoom-min-height 30))
+ '(zoom-size '(90 30)))
 ```
 
 ### TODO what about golden ratio?
