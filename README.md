@@ -26,8 +26,8 @@ Usage
 Enable this minor mode with `M-x zoom-mode` otherwise use `M-x zoom` to manually
 rearrange windows just once.
 
-Sample configuration
---------------------
+Example configuration
+---------------------
 
 Add the following to your init file to load `zoom-mode` at startup and to set
 the focused window size to 90 columns and 30 rows:
