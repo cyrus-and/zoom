@@ -38,11 +38,13 @@
 
 (defcustom zoom-min-width 80
   "Minimum width of the focused window in columns."
-  :group 'zoom)
+  :group 'zoom
+  :type 'integer)
 
 (defcustom zoom-min-height 24
   "Minimum height of the focused window in rows."
-  :group 'zoom)
+  :group 'zoom
+  :type 'integer)
 
 ;;;###autoload
 (defun zoom ()
