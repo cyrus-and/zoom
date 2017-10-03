@@ -33,13 +33,13 @@
   :group 'windows)
 
 (defcustom zoom-min-width 80
-  "Minimum width of the selected window in columns."
-  :type 'integer
+  "Minimum width of the selected window in columns or width ratio."
+  :type 'number
   :group 'zoom)
 
 (defcustom zoom-min-height 24
-  "Minimum height of the selected window in rows."
-  :type 'integer
+  "Minimum height of the selected window in rows or height ratio."
+  :type 'number
   :group 'zoom)
 
 (defcustom zoom-ignored-major-modes nil
@@ -100,6 +100,26 @@ are not called."
        (when (funcall predicate)
          (throw 'ignored t))))))
 
+(defun zoom--resize (horizontal)
+  "Resize the selected window according to the user preference.
+Argument HORIZONTAL determines whether the window should be
+resized horizontally or vertically."
+  (let* ((size-hint
+          (if horizontal zoom-min-width zoom-min-height))
+         (window-size
+          (if horizontal (window-total-width) (window-total-height)))
+         (frame-size
+          (if horizontal (frame-width) (frame-height)))
+         ;; either use an absolute value or a ratio
+         (min-window-size
+          (if (floatp size-hint) (floor (* size-hint frame-size)) size-hint))
+         ;; do not shrink the window if it is already large enough
+         (desired-delta (max (- min-window-size window-size) 0))
+         ;; fall back to the maximum available if the windows are too small
+         (delta (window-resizable nil desired-delta horizontal)))
+    ;; actually resize the window
+    (window-resize nil delta horizontal)))
+
 (defun zoom--update ()
   "Update the window layout in the current frame."
   ;; temporarily disables this mode during resize to avoid infinite recursion
@@ -112,11 +132,8 @@ are not called."
     ;; check if the selected window is not ignored
     (unless (zoom--window-ignored-p)
       ;; resize the selected window
-      (let ((delta-width (max (- zoom-min-width (window-total-width)) 0))
-            (delta-height (max (- zoom-min-height (window-total-height)) 0)))
-        ;; fall back to the maximum available if the windows are too small
-        (window-resize nil (window-resizable nil delta-width t) t)
-        (window-resize nil (window-resizable nil delta-height nil) nil))
+      (zoom--resize t)
+      (zoom--resize nil)
       ;; scroll all the way to the left border (if the window is wide enough to
       ;; contain it) otherwise scroll to center the point
       (scroll-right (window-hscroll))
