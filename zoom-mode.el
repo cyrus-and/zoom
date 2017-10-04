@@ -166,7 +166,7 @@ ARGUMENTS is ignored."
               (frame-root-window-p (selected-window)))
     (zoom--update)))
 
-(defun zoom--register ()
+(defun zoom--on ()
   "Enable hooks and advices and update the layout."
   (add-hook 'window-size-change-functions 'zoom--hook-handler)
   (advice-add 'select-window :after 'zoom--hook-handler)
@@ -175,7 +175,7 @@ ARGUMENTS is ignored."
     (with-selected-frame frame
       (zoom--hook-handler))))
 
-(defun zoom--deregister ()
+(defun zoom--off ()
   "Disable hooks and advices and evenly balance the windows."
   (remove-hook 'window-size-change-functions 'zoom--hook-handler)
   (advice-remove 'select-window 'zoom--hook-handler)
@@ -189,8 +189,8 @@ ARGUMENTS is ignored."
   :global t
   :lighter " Z"
   (if zoom-mode
-      (zoom--register)
-    (zoom--deregister)))
+      (zoom--on)
+    (zoom--off)))
 
 (provide 'zoom-mode)
 
