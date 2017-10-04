@@ -186,9 +186,9 @@ resized horizontally or vertically."
          ;; use the body size for ratios and the total size (including fringes,
          ;; scroll bars, etc.) for absolute values
          (window-size
-          (if horizontal
-              (if (floatp size-hint) (window-total-width) (window-width))
-            (if (floatp size-hint) (window-total-height) (window-height))))
+          (if (floatp size-hint)
+              (if horizontal (window-total-width) (window-total-height))
+            (if horizontal (window-width) (window-height))))
          ;; either use an absolute value or a ratio
          (min-window-size
           (if (floatp size-hint) (round (* size-hint frame-size)) size-hint))
