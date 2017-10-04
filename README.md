@@ -69,4 +69,12 @@ Follows all the possible ways to blacklist windows, for example:
 (Please note that ignored windows are not resized when selected but all the
 windows are nevertheless arranged with `balance-windows`.)
 
-### TODO what about golden ratio?
+### What about [`golden-ratio.el`]?
+
+I have been a more or less happy [`golden-ratio.el`] user for some time when I
+stared noticing some bugs and sadly I discovered that it is apparently a dead
+project now, so I decided to write a new and improved minor mode from scratch
+that implements the same basic idea of automatic window layout as my first
+attempt at Emacs mode development.
+
+[`golden-ratio.el`]: https://github.com/roman/golden-ratio.el
