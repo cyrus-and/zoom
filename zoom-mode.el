@@ -76,6 +76,15 @@ are not called."
   :group 'zoom)
 
 ;;;###autoload
+(define-minor-mode zoom-mode
+  "Enforce a fixed and automatic balanced window layout."
+  :global t
+  :lighter " Z"
+  (if zoom-mode
+      (zoom--on)
+    (zoom--off)))
+
+;;;###autoload
 (defun zoom ()
   "Zoom the current window and balance the others."
   (interactive)
@@ -83,6 +92,48 @@ are not called."
   (if zoom-mode
       (message "Window zooming is automatic (M-x zoom-mode to disable)")
     (zoom--update)))
+
+(defun zoom--on ()
+  "Enable hooks and advices and update the layout."
+  (add-hook 'window-size-change-functions 'zoom--hook-handler)
+  (advice-add 'select-window :after 'zoom--hook-handler)
+  ;; update the layout once loaded
+  (dolist (frame (frame-list))
+    (with-selected-frame frame
+      (zoom--hook-handler))))
+
+(defun zoom--off ()
+  "Disable hooks and advices and evenly balance the windows."
+  (remove-hook 'window-size-change-functions 'zoom--hook-handler)
+  (advice-remove 'select-window 'zoom--hook-handler)
+  ;; leave with a clean layout
+  (dolist (frame (frame-list))
+    (balance-windows frame)))
+
+(defun zoom--hook-handler (&rest arguments)
+  "Handle an update event.
+ARGUMENTS is ignored."
+  ;; check if should actually update
+  (unless (or (not zoom-mode)
+              (window-minibuffer-p)
+              ;; `one-window-p' does not work well with the completion buffer
+              ;; when emacsclient is used
+              (frame-root-window-p (selected-window)))
+    (zoom--update)))
+
+(defun zoom--update ()
+  "Update the window layout in the current frame."
+  ;; temporarily disables this mode during resize to avoid infinite recursion
+  ;; and enable `window-combination-resize' too ensure that other windows are
+  ;; resized nicely after resizing the selected one
+  (let ((zoom-mode nil)
+        (window-combination-resize t))
+    ;; start from a balanced layout anyway
+    (balance-windows)
+    ;; check if the selected window is not ignored
+    (unless (zoom--window-ignored-p)
+      (zoom--resize)
+      (zoom--fix-scroll))))
 
 (defun zoom--window-ignored-p ()
   "Check whether the selected window will be ignored or not."
@@ -101,6 +152,11 @@ are not called."
      (dolist (predicate zoom-ignore-predicates)
        (when (funcall predicate)
          (throw 'ignored t))))))
+
+(defun zoom--resize ()
+  "Resize the selected window according to the user preference."
+  (zoom--resize-one-side t)
+  (zoom--resize-one-side nil))
 
 (defun zoom--resize-one-side (horizontal)
   "Resize one dimension of the selected window according to the user preference.
@@ -126,11 +182,6 @@ resized horizontally or vertically."
     ;; actually resize the window
     (window-resize nil delta horizontal)))
 
-(defun zoom--resize ()
-  "Resize the selected window according to the user preference."
-  (zoom--resize-one-side t)
-  (zoom--resize-one-side nil))
-
 (defun zoom--fix-scroll ()
   "Fix the horizontal scrolling if needed."
   ;; scroll all the way to the left border
@@ -140,57 +191,6 @@ resized horizontally or vertically."
   (when (and truncate-lines
              (> (current-column) (- (window-width) hscroll-margin)))
     (scroll-left (- (current-column) (/ (window-width) 2)))))
-
-(defun zoom--update ()
-  "Update the window layout in the current frame."
-  ;; temporarily disables this mode during resize to avoid infinite recursion
-  ;; and enable `window-combination-resize' too ensure that other windows are
-  ;; resized nicely after resizing the selected one
-  (let ((zoom-mode nil)
-        (window-combination-resize t))
-    ;; start from a balanced layout anyway
-    (balance-windows)
-    ;; check if the selected window is not ignored
-    (unless (zoom--window-ignored-p)
-      (zoom--resize)
-      (zoom--fix-scroll))))
-
-(defun zoom--hook-handler (&rest arguments)
-  "Handle an update event.
-ARGUMENTS is ignored."
-  ;; check if should actually update
-  (unless (or (not zoom-mode)
-              (window-minibuffer-p)
-              ;; `one-window-p' does not work well with the completion buffer
-              ;; when emacsclient is used
-              (frame-root-window-p (selected-window)))
-    (zoom--update)))
-
-(defun zoom--on ()
-  "Enable hooks and advices and update the layout."
-  (add-hook 'window-size-change-functions 'zoom--hook-handler)
-  (advice-add 'select-window :after 'zoom--hook-handler)
-  ;; update the layout once loaded
-  (dolist (frame (frame-list))
-    (with-selected-frame frame
-      (zoom--hook-handler))))
-
-(defun zoom--off ()
-  "Disable hooks and advices and evenly balance the windows."
-  (remove-hook 'window-size-change-functions 'zoom--hook-handler)
-  (advice-remove 'select-window 'zoom--hook-handler)
-  ;; leave with a clean layout
-  (dolist (frame (frame-list))
-    (balance-windows frame)))
-
-;;;###autoload
-(define-minor-mode zoom-mode
-  "Enforce a fixed and automatic balanced window layout."
-  :global t
-  :lighter " Z"
-  (if zoom-mode
-      (zoom--on)
-    (zoom--off)))
 
 (provide 'zoom-mode)
 
