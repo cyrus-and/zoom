@@ -11,6 +11,12 @@ TODO screencast
 Installation
 ------------
 
+### TODO melpa or such
+
+### Local package
+
+Run just once `M-x package-install-file` passing `/path/to/zoom-mode.el`.
+
 ### Manual
 
 Add the following to your init file:
@@ -18,8 +24,6 @@ Add the following to your init file:
 ```el
 (require 'zoom-mode "/path/to/zoom-mode.el")
 ```
-
-### TODO melpa or such
 
 Usage
 -----

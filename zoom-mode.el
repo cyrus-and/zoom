@@ -20,6 +20,9 @@
 ;; OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 ;; SOFTWARE.
 
+;; Author: Andrea Cardaci <cyrus.and@gmail.com>
+;; Version: 0.1.0
+
 ;;; Commentary:
 
 ;; This minor mode takes care of managing the window sizes by enforcing a fixed
