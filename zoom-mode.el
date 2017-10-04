@@ -108,10 +108,14 @@ Argument HORIZONTAL determines whether the window should be
 resized horizontally or vertically."
   (let* ((size-hint
           (if horizontal (car zoom-size) (cdr zoom-size)))
-         (window-size
-          (if horizontal (window-total-width) (window-total-height)))
          (frame-size
           (if horizontal (frame-width) (frame-height)))
+         ;; use the body size for ratios and the total size (including fringes,
+         ;; scroll bars, etc.) for absolute values
+         (window-size
+          (if horizontal
+              (if (floatp size-hint) (window-total-width) (window-width))
+            (if (floatp size-hint) (window-total-height) (window-height))))
          ;; either use an absolute value or a ratio
          (min-window-size
           (if (floatp size-hint) (floor (* size-hint frame-size)) size-hint))
@@ -134,8 +138,8 @@ resized horizontally or vertically."
   ;; if the window is not wide enough to contain the point scroll to center
   ;; unless lines are not truncated
   (when (and truncate-lines
-             (> (current-column) (- (window-total-width) hscroll-margin)))
-    (scroll-left (- (current-column) (/ (window-total-width) 2)))))
+             (> (current-column) (- (window-width) hscroll-margin)))
+    (scroll-left (- (current-column) (/ (window-width) 2)))))
 
 (defun zoom--update ()
   "Update the window layout in the current frame."
