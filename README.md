@@ -47,7 +47,11 @@ or:
 Example configurations
 ----------------------
 
-Resize the selected window according to the [golden ratio].
+For a complete reference see `M-x customize-group RET zoom`.
+
+---
+
+Resize the selected window using the [golden ratio]:
 
 ```el
 (custom-set-variables
@@ -56,13 +60,18 @@ Resize the selected window according to the [golden ratio].
 
 [golden ratio]: https://en.wikipedia.org/wiki/Golden_ratio
 
+---
+
 Override the key binding of `balance-windows`:
 
 ```el
 (global-set-key (kbd "C-x +") 'zoom)
 ```
 
-Follows all the possible ways to blacklist windows, for example:
+---
+
+Prevent some windows from being resized, for example:
+
 - `dired` and `markdown` major modes;
 - `zoom-mode.el` `init.el` buffer names;
 - calculator-related windows;
