@@ -39,7 +39,9 @@
 (defcustom zoom-size '(80 . 24)
   "Size hint for the selected window.
 Each component can be either an absolute value in rows/columns or
-a ratio between the selected window and the frame size."
+a ratio between the selected window and the frame size. In any
+case, windows are never shrinked if they are already larger than
+the resulting size."
   :type '(cons (choice (integer :tag "Columns")
                        (float :tag "Width ratio"))
                (choice (integer :tag "Rows")
