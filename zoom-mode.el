@@ -41,6 +41,7 @@ a ratio between the selected window and the frame size."
                        (float :tag "Width ratio"))
                (choice (integer :tag "Rows")
                        (float :tag "Height ratio")))
+  :safe 'consp
   :group 'zoom)
 
 (defcustom zoom-ignored-major-modes nil
