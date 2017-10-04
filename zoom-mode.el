@@ -38,14 +38,21 @@
 
 (defcustom zoom-size '(80 . 24)
   "Size hint for the selected window.
-Each component can be either an absolute value in rows/columns or
-a ratio between the selected window and the frame size. In any
-case, windows are never shrinked if they are already larger than
-the resulting size."
-  :type '(cons (choice (integer :tag "Columns")
-                       (float :tag "Width ratio"))
-               (choice (integer :tag "Rows")
-                       (float :tag "Height ratio")))
+It can be either a cons or a function.
+
+Each component of the cons can be either an absolute value in
+rows/columns or a ratio between the selected window and the frame
+size.  In any case, windows are never shrinked if they are already
+larger than the resulting size.
+
+The function takes no arguments and returns a cons as specified
+above."
+  :type '(choice (function :tag "Custom")
+                 (cons :tag "Fixed"
+                       (choice (integer :tag "Columns")
+                               (float :tag "Width ratio"))
+                       (choice (integer :tag "Rows")
+                               (float :tag "Height ratio"))))
   :safe 'consp
   :group 'zoom)
 
@@ -160,15 +167,20 @@ ARGUMENTS is ignored."
 
 (defun zoom--resize ()
   "Resize the selected window according to the user preference."
-  (zoom--resize-one-side t)
-  (zoom--resize-one-side nil))
+  (let ((size-hint-cons
+         ;; either use the cons as is or call the custom function
+         (if (functionp zoom-size) (funcall zoom-size) zoom-size)))
+    (zoom--resize-one-side size-hint-cons t)
+    (zoom--resize-one-side size-hint-cons nil)))
 
-(defun zoom--resize-one-side (horizontal)
+(defun zoom--resize-one-side (size-hint-cons horizontal)
   "Resize one dimension of the selected window according to the user preference.
+Argument SIZE-HINT-CONS is the size hint provided by the user.
+
 Argument HORIZONTAL determines whether the window should be
 resized horizontally or vertically."
   (let* ((size-hint
-          (if horizontal (car zoom-size) (cdr zoom-size)))
+          (if horizontal (car size-hint-cons) (cdr size-hint-cons)))
          (frame-size
           (if horizontal (frame-width) (frame-height)))
          ;; use the body size for ratios and the total size (including fringes,

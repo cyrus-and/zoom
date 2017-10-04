@@ -62,6 +62,20 @@ Resize the selected window using the [golden ratio]:
 
 ---
 
+Resize the selected window according to the frame width, for example:
+
+- 90 columns and 75% of the frame height if the frame width is larger than 1024
+  pixels;
+- half the frame size otherwise.
+
+```el
+(custom-set-variables
+ '(zoom-size (lambda () (cond ((> (frame-pixel-width) 1280) '(90 . 0.75))
+                              (t                            '(0.5 . 0.5)))))
+```
+
+---
+
 Override the key binding of `balance-windows`:
 
 ```el
