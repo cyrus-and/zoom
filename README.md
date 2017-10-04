@@ -27,16 +27,46 @@ Usage
 Enable this minor mode with `M-x zoom-mode` otherwise use `M-x zoom` to manually
 rearrange windows just once.
 
-Example configuration
----------------------
-
-Add the following to your init file to load `zoom-mode` at startup and to set
-the focused window size to 90 columns and 30 rows:
+To load `zoom-mode` automatically add one of the following to your init file:
 
 ```el
 (custom-set-variables
- '(zoom-mode t)
- '(zoom-size '(90 30)))
+ '(zoom-mode t))
 ```
+
+or:
+
+```el
+(zoom-mode t)
+```
+
+Example configurations
+----------------------
+
+Resize the selected window according to the [golden ratio].
+
+```el
+(custom-set-variables
+ '(zoom-size '(0.61803399 0.61803399)))
+```
+
+[golden ratio]: https://en.wikipedia.org/wiki/Golden_ratio
+
+Follows all the possible ways to blacklist windows, for example:
+- `dired` and `markdown` major modes;
+- `zoom-mode.el` `init.el` buffer names;
+- calculator-related windows;
+- any buffer containing less than 20 lines.
+
+```el
+(custom-set-variables
+ '(zoom-ignored-major-modes '(dired-mode markdown-mode))
+ '(zoom-ignored-buffer-names '("zoom-mode.el" "init.el"))
+ '(zoom-ignored-buffer-name-regexps '("^*calc"))
+ '(zoom-ignore-predicates '((lambda () (> (count-lines (point-min) (point-max)) 20)))))
+```
+
+(Please note that ignored windows are not resized when selected but all the
+windows are nevertheless arranged with `balance-windows`.)
 
 ### TODO what about golden ratio?
