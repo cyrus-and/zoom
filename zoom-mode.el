@@ -179,7 +179,7 @@ resized horizontally or vertically."
             (if (floatp size-hint) (window-total-height) (window-height))))
          ;; either use an absolute value or a ratio
          (min-window-size
-          (if (floatp size-hint) (floor (* size-hint frame-size)) size-hint))
+          (if (floatp size-hint) (round (* size-hint frame-size)) size-hint))
          ;; do not shrink the window if it is already large enough
          (desired-delta (max (- min-window-size window-size) 0))
          ;; fall back to the maximum available if the windows are too small
