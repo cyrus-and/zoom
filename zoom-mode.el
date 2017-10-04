@@ -161,7 +161,9 @@ ARGUMENTS is ignored."
   ;; check if should actually update
   (unless (or (not zoom-mode)
               (window-minibuffer-p)
-              (one-window-p))
+              ;; `one-window-p' does not work well with the completion buffer
+              ;; when emacsclient is used
+              (frame-root-window-p (selected-window)))
     (zoom--update)))
 
 (defun zoom--register ()
