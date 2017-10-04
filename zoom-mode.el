@@ -129,10 +129,12 @@ resized horizontally or vertically."
 
 (defun zoom--fix-scroll ()
   "Fix the horizontal scrolling if needed."
-  ;; scroll all the way to the left border (if the window is wide enough to
-  ;; contain it) otherwise scroll to center the point
+  ;; scroll all the way to the left border
   (scroll-right (window-hscroll))
-  (when (> (current-column) (- (window-total-width) hscroll-margin))
+  ;; if the window is not wide enough to contain the point scroll to center
+  ;; unless lines are not truncated
+  (when (and truncate-lines
+             (> (current-column) (- (window-total-width) hscroll-margin)))
     (scroll-left (- (current-column) (/ (window-total-width) 2)))))
 
 (defun zoom--update ()
