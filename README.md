@@ -52,6 +52,12 @@ Resize the selected window according to the [golden ratio].
 
 [golden ratio]: https://en.wikipedia.org/wiki/Golden_ratio
 
+Override the key binding of `balance-windows`:
+
+```el
+(global-set-key (kbd "C-x +") 'zoom)
+```
+
 Follows all the possible ways to blacklist windows, for example:
 - `dired` and `markdown` major modes;
 - `zoom-mode.el` `init.el` buffer names;
