@@ -183,8 +183,8 @@ resized horizontally or vertically."
           (if horizontal (car size-hint-cons) (cdr size-hint-cons)))
          (frame-size
           (if horizontal (frame-width) (frame-height)))
-         ;; use the body size for ratios and the total size (including fringes,
-         ;; scroll bars, etc.) for absolute values
+         ;; use the total size (including fringes, scroll bars, etc.) for ratios
+         ;; and the body size for absolute values
          (window-size
           (if (floatp size-hint)
               (if horizontal (window-total-width) (window-total-height))
