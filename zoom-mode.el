@@ -28,7 +28,7 @@
 ;; This minor mode takes care of managing the window sizes by enforcing a fixed
 ;; and automatic balanced layout where the currently selected window is resized
 ;; according to `zoom-size' which can be either an absolute value in
-;; rows/columns or a ratio between the selected window and frame size.
+;; lines/columns or a ratio between the selected window and frame size.
 
 ;;; Code:
 
@@ -41,9 +41,9 @@
 It can be either a cons or a function.
 
 Each component of the cons can be either an absolute value in
-rows/columns or a ratio between the selected window and the frame
-size.  In any case, windows are never shrinked if they are already
-larger than the resulting size.
+lines/columns or a ratio between the selected window and the
+frame size.  In any case, windows are never shrinked if they are
+already larger than the resulting size.
 
 The function takes no arguments and returns a cons as specified
 above."
@@ -51,7 +51,7 @@ above."
                  (cons :tag "Fixed"
                        (choice (integer :tag "Columns")
                                (float :tag "Width ratio"))
-                       (choice (integer :tag "Rows")
+                       (choice (integer :tag "Lines")
                                (float :tag "Height ratio"))))
   :safe 'consp
   :group 'zoom)
