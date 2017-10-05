@@ -188,7 +188,7 @@ resized horizontally or vertically."
          (window-size
           (if (floatp size-hint)
               (if horizontal (window-total-width) (window-total-height))
-            (if horizontal (window-width) (window-height))))
+            (if horizontal (window-body-width) (window-body-height))))
          ;; either use an absolute value or a ratio
          (min-window-size
           (if (floatp size-hint) (round (* size-hint frame-size)) size-hint))
@@ -206,8 +206,8 @@ resized horizontally or vertically."
   ;; if the window is not wide enough to contain the point scroll to center
   ;; unless lines are not truncated
   (when (and truncate-lines
-             (> (current-column) (- (window-width) hscroll-margin)))
-    (scroll-left (- (current-column) (/ (window-width) 2)))))
+             (> (current-column) (- (window-body-width) hscroll-margin)))
+    (scroll-left (- (current-column) (/ (window-body-width) 2)))))
 
 (provide 'zoom-mode)
 
