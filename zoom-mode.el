@@ -42,8 +42,10 @@ It can be either a cons or a function.
 
 Each component of the cons can be either an absolute value in
 lines/columns or a ratio between the selected window and the
-frame size.  In any case, windows are never shrinked if they are
-already larger than the resulting size.
+frame size.  In the former case the window is resized according
+to its body size, i.e., the total window size can be much larger.
+In any case, windows are never shrinked if they are already
+larger than the resulting size.
 
 The function takes no arguments and returns a cons as specified
 above."
