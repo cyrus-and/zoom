@@ -6,7 +6,7 @@ automatic balanced layout where the currently selected window is resized
 according to `zoom-size` which can be either an absolute value in lines/columns
 or a ratio between the selected window and frame size.
 
-TODO screencast
+![Screencast](https://i.imgur.com/RktspPg.gif)
 
 Installation
 ------------
