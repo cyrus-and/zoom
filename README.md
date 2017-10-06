@@ -17,7 +17,7 @@ Run just once `M-x package-install-file` passing `/path/to/zoom-mode.el`.
 
 ### Manual
 
-Add the following to your init file:
+Add the following to the init file:
 
 ```el
 (require 'zoom-mode "/path/to/zoom-mode.el")
@@ -29,7 +29,7 @@ Usage
 Enable this minor mode with `M-x zoom-mode` otherwise use `M-x zoom` to manually
 rearrange windows just once.
 
-To load `zoom-mode` automatically add one of the following to your init file:
+To load `zoom-mode` automatically add one of the following to the init file:
 
 ```el
 (custom-set-variables
@@ -67,9 +67,12 @@ Resize the selected window according to the frame width, for example:
 - half the frame size otherwise.
 
 ```el
+(defun size-callback ()
+  (cond ((> (frame-pixel-width) 1280) '(90 . 0.75))
+        (t                            '(0.5 . 0.5))))
+
 (custom-set-variables
- '(zoom-size (lambda () (cond ((> (frame-pixel-width) 1280) '(90 . 0.75))
-                              (t                            '(0.5 . 0.5)))))
+ '(zoom-size 'size-callback))
 ```
 
 ---
