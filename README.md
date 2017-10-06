@@ -53,7 +53,7 @@ Resize the selected window using the [golden ratio]:
 
 ```el
 (custom-set-variables
- '(zoom-size '(0.618 0.618)))
+ '(zoom-size '(0.618 . 0.618)))
 ```
 
 [golden ratio]: https://en.wikipedia.org/wiki/Golden_ratio
