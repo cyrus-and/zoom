@@ -1,4 +1,4 @@
-;;; zoom-mode.el --- Enforce a fixed and automatic balanced window layout
+;;; zoom-mode.el --- Fixed and automatic balanced window layout
 
 ;; Copyright (c) 2017 Andrea Cardaci <cyrus.and@gmail.com>
 ;;
