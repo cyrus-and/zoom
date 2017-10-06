@@ -11,8 +11,6 @@ or a ratio between the selected window and frame size.
 Installation
 ------------
 
-### TODO melpa or such
-
 ### Local package
 
 Run just once `M-x package-install-file` passing `/path/to/zoom-mode.el`.
