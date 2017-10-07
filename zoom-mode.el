@@ -22,6 +22,8 @@
 
 ;; Author: Andrea Cardaci <cyrus.and@gmail.com>
 ;; Version: 0.1.0
+;; URL: https://github.com/cyrus-and/zoom
+;; Package-Requires: ((emacs "24.4"))
 
 ;;; Commentary:
 
@@ -94,6 +96,7 @@ are not called."
   "Enforce a fixed and automatic balanced window layout."
   :global t
   :lighter " Z"
+  :require 'zoom-mode
   (if zoom-mode
       (zoom--on)
     (zoom--off)))
