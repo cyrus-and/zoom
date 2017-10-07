@@ -13,14 +13,14 @@ Installation
 
 ### Local package
 
-Run just once `M-x package-install-file` passing `/path/to/zoom-mode.el`.
+Run just once `M-x package-install-file` passing `/path/to/zoom.el`.
 
 ### Manual
 
 Add the following to the init file:
 
 ```el
-(require 'zoom-mode "/path/to/zoom-mode.el")
+(require 'zoom "/path/to/zoom.el")
 ```
 
 Usage
@@ -29,7 +29,7 @@ Usage
 Enable this minor mode with `M-x zoom-mode` otherwise use `M-x zoom` to manually
 rearrange windows just once.
 
-To load `zoom-mode` automatically add one of the following to the init file:
+To load it automatically add one of the following to the init file:
 
 ```el
 (custom-set-variables
@@ -88,14 +88,14 @@ Override the key binding of `balance-windows`:
 Prevent some windows from being resized, for example:
 
 - `dired` and `markdown` major modes;
-- `zoom-mode.el` `init.el` buffer names;
+- `zoom.el` `init.el` buffer names;
 - calculator-related windows;
 - any buffer containing less than 20 lines.
 
 ```el
 (custom-set-variables
  '(zoom-ignored-major-modes '(dired-mode markdown-mode))
- '(zoom-ignored-buffer-names '("zoom-mode.el" "init.el"))
+ '(zoom-ignored-buffer-names '("zoom.el" "init.el"))
  '(zoom-ignored-buffer-name-regexps '("^*calc"))
  '(zoom-ignore-predicates '((lambda () (> (count-lines (point-min) (point-max)) 20)))))
 ```

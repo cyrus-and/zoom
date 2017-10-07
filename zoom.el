@@ -1,4 +1,4 @@
-;;; zoom-mode.el --- Fixed and automatic balanced window layout
+;;; zoom.el --- Fixed and automatic balanced window layout
 
 ;; Copyright (c) 2017 Andrea Cardaci <cyrus.and@gmail.com>
 ;;
@@ -96,7 +96,7 @@ are not called."
   "Enforce a fixed and automatic balanced window layout."
   :global t
   :lighter " Z"
-  :require 'zoom-mode
+  :require 'zoom
   (if zoom-mode
       (zoom--on)
     (zoom--off)))
@@ -214,6 +214,6 @@ resized horizontally or vertically."
              (> (current-column) (- (window-body-width) hscroll-margin)))
     (scroll-left (- (current-column) (/ (window-body-width) 2)))))
 
-(provide 'zoom-mode)
+(provide 'zoom)
 
-;;; zoom-mode.el ends here
+;;; zoom.el ends here
