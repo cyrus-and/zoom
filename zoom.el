@@ -40,6 +40,7 @@
 
 (defcustom zoom-size '(80 . 24)
   "Size hint for the selected window.
+
 It can be either a cons or a function.
 
 Each component of the cons can be either an absolute value in
@@ -62,6 +63,7 @@ above."
 
 (defcustom zoom-ignored-major-modes nil
   "List of ignored major modes.
+
 Selected windows using any of these major modes should not be
 enlarged (only balanced)."
   :type '(repeat symbol)
@@ -69,6 +71,7 @@ enlarged (only balanced)."
 
 (defcustom zoom-ignored-buffer-names nil
   "List of ignored buffer names.
+
 Selected windows displaying any of these buffers should not be
 enlarged (only balanced)."
   :type '(repeat string)
@@ -76,6 +79,7 @@ enlarged (only balanced)."
 
 (defcustom zoom-ignored-buffer-name-regexps nil
   "List of ignored buffer name regexps.
+
 Selected windows displaying buffers matching any of these regexps
 should not be enlarged (only balanced)."
   :type '(repeat regexp)
@@ -83,6 +87,7 @@ should not be enlarged (only balanced)."
 
 (defcustom zoom-ignore-predicates nil
   "List of additional predicates that allow to ignore windows.
+
 These functions are called (in order) to decide whether the
 selected window should be ignored (only balanced) or not.
 Predicates take no parameters and as soon as one function returns
@@ -129,6 +134,7 @@ are not called."
 
 (defun zoom--hook-handler (&rest arguments)
   "Handle an update event.
+
 ARGUMENTS is ignored."
   ;; check if should actually update
   (unless (or (not zoom-mode)
@@ -180,6 +186,7 @@ ARGUMENTS is ignored."
 
 (defun zoom--resize-one-side (size-hint-cons horizontal)
   "Resize one dimension of the selected window according to the user preference.
+
 Argument SIZE-HINT-CONS is the size hint provided by the user.
 
 Argument HORIZONTAL determines whether the window should be
