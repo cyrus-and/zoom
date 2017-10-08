@@ -13,15 +13,17 @@ Installation
 
 ### MELPA (recommended)
 
-    M-x package-install RET zoom
+```
+M-x package-install RET zoom
+```
 
 ### Local package
 
-    M-x package-install-file RET /path/to/zoom.el
+```
+M-x package-install-file RET /path/to/zoom.el
+```
 
 ### Manual
-
-Add the following to the init file:
 
 ```el
 (require 'zoom "/path/to/zoom.el")
@@ -30,20 +32,14 @@ Add the following to the init file:
 Usage
 -----
 
-Enable this minor mode with `M-x zoom-mode` otherwise use `M-x zoom` to manually
-rearrange windows just once.
+Enable Zoom with `M-x zoom-mode` otherwise use `M-x zoom` to manually rearrange
+windows just once.
 
-To load it automatically add one of the following to the init file:
+Load it automatically with:
 
 ```el
 (custom-set-variables
  '(zoom-mode t))
-```
-
-or:
-
-```el
-(zoom-mode t)
 ```
 
 Example configurations
