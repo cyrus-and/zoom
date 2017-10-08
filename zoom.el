@@ -99,7 +99,7 @@ are not called."
 
 ;;;###autoload
 (define-minor-mode zoom-mode
-  "Enforce a fixed and automatic balanced window layout."
+  "Perform `zoom' automatically as the selected window changes."
   :global t
   :lighter " Z"
   :require 'zoom
