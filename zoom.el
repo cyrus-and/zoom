@@ -109,7 +109,7 @@ are not called."
 
 ;;;###autoload
 (defun zoom ()
-  "Zoom the current window and balance the others."
+  "Zoom the current window and balance the others according to `zoom-size'."
   (interactive)
   ;; manual invocation only works when this mode is disabled
   (if zoom-mode
