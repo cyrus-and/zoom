@@ -1,5 +1,7 @@
-Zoom    [![MELPA](https://melpa.org/packages/zoom-badge.svg)](https://melpa.org/#/zoom)
-====
+[![MELPA Stable](https://stable.melpa.org/packages/zoom-badge.svg)](https://stable.melpa.org/#/zoom)
+[![MELPA](https://melpa.org/packages/zoom-badge.svg)](https://melpa.org/#/zoom)
+
+# Zoom
 
 This minor mode takes care of managing the window sizes by enforcing a fixed and
 automatic balanced layout where the currently selected window is resized
@@ -8,14 +10,15 @@ ratio between the selected window and frame size or even a custom callback.
 
 ![Screencast](https://i.imgur.com/RktspPg.gif)
 
-Installation
-------------
+## Installation
 
-### MELPA (recommended)
+### [MELPA] package
 
 ```
 M-x package-install RET zoom
 ```
+
+[MELPA]: https://melpa.org/#/getting-started
 
 ### Local package
 
@@ -29,8 +32,7 @@ M-x package-install-file RET /path/to/zoom.el
 (require 'zoom "/path/to/zoom.el")
 ```
 
-Usage
------
+## Usage
 
 Enable Zoom with `M-x zoom-mode` otherwise use `M-x zoom` to manually rearrange
 windows just once.
@@ -42,8 +44,7 @@ Load it automatically with:
  '(zoom-mode t))
 ```
 
-Example configurations
-----------------------
+## Example configurations
 
 For a complete reference see `M-x customize-group RET zoom`.
 
@@ -103,7 +104,7 @@ Prevent some windows from being resized, for example:
 (Please note that ignored windows are not resized when selected but all the
 windows are nevertheless arranged with `balance-windows`.)
 
-### What about [`golden-ratio.el`]?
+## What about [`golden-ratio.el`]?
 
 I have been a more or less happy [`golden-ratio.el`] user for some time when I
 stared noticing some bugs and sadly I discovered that it is apparently a dead
