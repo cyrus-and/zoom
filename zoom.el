@@ -148,8 +148,12 @@ ARGUMENTS is ignored."
 (defun zoom--update ()
   "Update the window layout in the current frame."
   (let (;; temporarily disables this mode during resize to avoid infinite
-        ;; recursion
+        ;; recursion (probably not needed thanks to the following)
         (zoom-mode nil)
+        ;; temporarily disable all (even external) hooks about window
+        ;; configuration changes to try to avoid potential flickering since
+        ;; `balance-windows' calls them
+        (window-configuration-change-hook nil)
         ;; make sure that other windows are resized nicely after resizing the
         ;; selected one
         (window-combination-resize t)
