@@ -1,4 +1,4 @@
-Zoom
+Zoom    [![MELPA](https://melpa.org/packages/zoom-badge.svg)](https://melpa.org/#/zoom)
 ====
 
 This minor mode takes care of managing the window sizes by enforcing a fixed and
@@ -10,6 +10,10 @@ ratio between the selected window and frame size or even a custom callback.
 
 Installation
 ------------
+
+### MELPA (recommended)
+
+    M-x package-install RET zoom
 
 ### Local package
 
