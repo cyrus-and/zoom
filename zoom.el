@@ -147,13 +147,14 @@ ARGUMENTS is ignored."
 
 (defun zoom--update ()
   "Update the window layout in the current frame."
-  ;; temporarily disables this mode during resize to avoid infinite recursion,
-  ;; enable `window-combination-resize' to make sure that other windows are
-  ;; resized nicely after resizing the selected one and enable
-  ;; `window-resize-pixelwise' to make sure that the exact same amount of pixels
-  ;; is assigned to siblings
-  (let ((zoom-mode nil)
+  (let (;; temporarily disables this mode during resize to avoid infinite
+        ;; recursion
+        (zoom-mode nil)
+        ;; make sure that other windows are resized nicely after resizing the
+        ;; selected one
         (window-combination-resize t)
+        ;; make sure that the exact same amount of pixels is assigned to all the
+        ;; siblings
         (window-resize-pixelwise t))
     ;; start from a balanced layout anyway
     (balance-windows)
