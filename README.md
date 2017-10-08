@@ -13,7 +13,7 @@ Installation
 
 ### Local package
 
-Run just once `M-x package-install-file` passing `/path/to/zoom.el`.
+    M-x package-install-file RET /path/to/zoom.el
 
 ### Manual
 
