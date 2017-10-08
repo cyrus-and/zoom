@@ -148,7 +148,7 @@ ARGUMENTS is ignored."
 (defun zoom--update ()
   "Update the window layout in the current frame."
   ;; temporarily disables this mode during resize to avoid infinite recursion
-  ;; and enable `window-combination-resize' too ensure that other windows are
+  ;; and enable `window-combination-resize' to ensure that other windows are
   ;; resized nicely after resizing the selected one
   (let ((zoom-mode nil)
         (window-combination-resize t))
