@@ -133,16 +133,21 @@ are not called."
   (dolist (frame (frame-list))
     (balance-windows frame)))
 
-(defun zoom--hook-handler (&rest arguments)
+(defun zoom--hook-handler (&optional window norecord)
   "Handle an update event.
 
-ARGUMENTS is ignored."
+WINDOW and NORECORD are according `select-window' and are only
+used when this function is called via `advice-add'."
   ;; check if should actually update
   (unless (or (not zoom-mode)
               (window-minibuffer-p)
               ;; `one-window-p' does not work well with the completion buffer
               ;; when emacsclient is used
-              (frame-root-window-p (selected-window)))
+              (frame-root-window-p (selected-window))
+              ;; do not update if `select-window' is called with NORECORD set to
+              ;; non-nil, that is, update only when a *meaningful* window
+              ;; selection happens
+              norecord)
     (zoom--update)))
 
 (defun zoom--update ()
