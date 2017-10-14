@@ -148,7 +148,8 @@ used when this function is called via `advice-add'."
               ;; non-nil, that is, update only when a *meaningful* window
               ;; selection happens
               norecord)
-    (zoom--update)))
+    (zoom--update))
+  (if (window-minibuffer-p) (balance-windows)))
 
 (defun zoom--update ()
   "Update the window layout in the current frame."
