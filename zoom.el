@@ -120,6 +120,7 @@ are not called."
   "Enable hooks and advices and update the layout."
   (add-hook 'window-size-change-functions 'zoom--hook-handler)
   (advice-add 'select-window :after 'zoom--hook-handler)
+  (add-hook 'minibuffer-setup-hook 'zoom--hook-handler)
   ;; update the layout once loaded
   (dolist (frame (frame-list))
     (with-selected-frame frame
@@ -128,6 +129,7 @@ are not called."
 (defun zoom--off ()
   "Disable hooks and advices and evenly balance the windows."
   (remove-hook 'window-size-change-functions 'zoom--hook-handler)
+  (remove-hook 'minibuffer-setup-hook 'zoom--hook-handler)
   (advice-remove 'select-window 'zoom--hook-handler)
   ;; leave with a clean layout
   (dolist (frame (frame-list))
@@ -140,7 +142,6 @@ WINDOW and NORECORD are according `select-window' and are only
 used when this function is called via `advice-add'."
   ;; check if should actually update
   (unless (or (not zoom-mode)
-              (window-minibuffer-p)
               ;; `one-window-p' does not work well with the completion buffer
               ;; when emacsclient is used
               (frame-root-window-p (selected-window))
@@ -175,6 +176,8 @@ used when this function is called via `advice-add'."
 (defun zoom--window-ignored-p ()
   "Check whether the selected window will be ignored or not."
   (or
+   ;; never attempt to zoom the minibuffer
+   (window-minibuffer-p)
    ;; check against the major mode
    (member major-mode zoom-ignored-major-modes)
    ;; check against the buffer name
