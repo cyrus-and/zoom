@@ -62,6 +62,11 @@ above."
   :safe 'consp
   :group 'zoom)
 
+(defcustom zoom-balance-windows t
+  "Whether to balance windows as well as resizing them."
+  :type 'boolean
+  :group 'zoom)
+
 (defcustom zoom-ignored-major-modes nil
   "List of ignored major modes.
 
@@ -132,8 +137,9 @@ are not called."
   (remove-hook 'minibuffer-setup-hook 'zoom--hook-handler)
   (advice-remove 'select-window 'zoom--hook-handler)
   ;; leave with a clean layout
-  (dolist (frame (frame-list))
-    (balance-windows frame)))
+  (when zoom-balance-windows
+   (dolist (frame (frame-list))
+     (balance-windows frame))))
 
 (defun zoom--hook-handler (&optional window norecord)
   "Handle an update event.
@@ -167,7 +173,8 @@ used when this function is called via `advice-add'."
         ;; siblings
         (window-resize-pixelwise t))
     ;; start from a balanced layout anyway
-    (balance-windows)
+    (when zoom-balance-windows
+     (balance-windows))
     ;; check if the selected window is not ignored
     (unless (zoom--window-ignored-p)
       (zoom--resize)
