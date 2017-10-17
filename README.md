@@ -44,6 +44,10 @@ Load it automatically with:
  '(zoom-mode t))
 ```
 
+See the [FAQ].
+
+[FAQ]: https://github.com/cyrus-and/zoom#faq
+
 ## Example configurations
 
 For a complete reference see `M-x customize-group RET zoom`.
@@ -104,7 +108,9 @@ Prevent some windows from being resized, for example:
 (Please note that ignored windows are not resized when selected but all the
 windows are nevertheless arranged with `balance-windows`.)
 
-## What about [`golden-ratio.el`]?
+## FAQ
+
+### What about [`golden-ratio.el`]?
 
 I have been a more or less happy [`golden-ratio.el`] user for some time when I
 stared noticing some bugs and sadly I discovered that it is apparently a dead
