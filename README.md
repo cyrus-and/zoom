@@ -122,10 +122,10 @@ attempt at Emacs mode development.
 
 ### Why when there are several horizontal splits the completions buffer is very small?
 
-This happens when `zoom-minibuffer-preserve-layout` is `non-nil` (the default)
+This happens when `zoom-minibuffer-preserve-layout` is non-`nil` (the default)
 because most of the space is probably occupied by the zoomed window. The
-solution (apart from setting aforementioned variable to `nil`) is to enable the
-`temp-buffer-resize-mode` minor mode:
+solution (apart from setting the aforementioned variable to `nil`) is to enable
+the `temp-buffer-resize-mode` minor mode:
 
 ```el
 (custom-set-variables
