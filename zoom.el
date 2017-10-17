@@ -97,6 +97,19 @@ are not called."
   :type '(repeat function)
   :group 'zoom)
 
+(defcustom zoom-minibuffer-preserve-layout t
+  "Non-nil means that the layout is retained when the minubuffer is entered.
+
+Otherwise, since the minibuffer cannot be zoomed, all the other
+windows are simply balanced.  Setting this variable to nil can be
+useful when third-party modes uses the minibuffer to display more
+than few lines."
+  :type 'boolean
+  :group 'zoom)
+
+;; hold the most recently zoomed window (a per-frame window is not necessary)
+(defvar zoom--window nil)
+
 ;;;###autoload
 (define-minor-mode zoom-mode
   "Perform `zoom' automatically as the selected window changes."
@@ -140,16 +153,23 @@ are not called."
 
 WINDOW and NORECORD are according `select-window' and are only
 used when this function is called via `advice-add'."
-  ;; check if should actually update
+  ;; filter according to the event that called this function
   (unless (or (not zoom-mode)
-              ;; `one-window-p' does not work well with the completion buffer
-              ;; when emacsclient is used
-              (frame-root-window-p (selected-window))
               ;; do not update if `select-window' is called with NORECORD set to
               ;; non-nil, that is, update only when a *meaningful* window
               ;; selection happens
               norecord)
-    (zoom--update)))
+    ;; check if should change `zoom--window' to the selected window
+    (unless (and
+             ;; first time
+             zoom--window
+             ;; when the selected window is the minibuffer, if requested
+             zoom-minibuffer-preserve-layout
+             (window-minibuffer-p (selected-window)))
+      (setq zoom--window (selected-window)))
+    ;; update the layout considering `zoom--window' as the selected window
+    (with-selected-window zoom--window
+      (zoom--update))))
 
 (defun zoom--update ()
   "Update the window layout in the current frame."
@@ -176,6 +196,9 @@ used when this function is called via `advice-add'."
 (defun zoom--window-ignored-p ()
   "Check whether the selected window will be ignored or not."
   (or
+   ;; `one-window-p' does not work well with the completion buffer
+   ;; when emacsclient is used
+   (frame-root-window-p (selected-window))
    ;; never attempt to zoom the minibuffer
    (window-minibuffer-p)
    ;; check against the major mode
