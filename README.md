@@ -119,3 +119,15 @@ that implements the same basic idea of automatic window layout as my first
 attempt at Emacs mode development.
 
 [`golden-ratio.el`]: https://github.com/roman/golden-ratio.el
+
+### Why when there are several horizontal splits the completions buffer is very small?
+
+This happens when `zoom-minibuffer-preserve-layout` is `non-nil` (the default)
+because most of the space is probably occupied by the zoomed window. The
+solution (apart from setting aforementioned variable to `nil`) is to enable the
+`temp-buffer-resize-mode` minor mode:
+
+```el
+(custom-set-variables
+ '(temp-buffer-resize-mode t))
+```
