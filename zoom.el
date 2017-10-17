@@ -107,9 +107,6 @@ than few lines."
   :type 'boolean
   :group 'zoom)
 
-;; hold the most recently zoomed window (a per-frame window is not necessary)
-(defvar zoom--window nil)
-
 ;;;###autoload
 (define-minor-mode zoom-mode
   "Perform `zoom' automatically as the selected window changes."
@@ -159,16 +156,11 @@ used when this function is called via `advice-add'."
               ;; non-nil, that is, update only when a *meaningful* window
               ;; selection happens
               norecord)
-    ;; check if should change `zoom--window' to the selected window
-    (unless (and
-             ;; the first time or when the window is no more available (see #11)
-             (window-valid-p zoom--window)
-             ;; when the selected window is the minibuffer, if requested
-             zoom-minibuffer-preserve-layout
-             (window-minibuffer-p (selected-window)))
-      (setq zoom--window (selected-window)))
-    ;; update the layout considering `zoom--window' as the selected window
-    (with-selected-window zoom--window
+    ;; zoom the selected window or the most recently used one if the minibuffer
+    ;; is selected (according to the user preference)
+    (with-selected-window
+        (if (and zoom-minibuffer-preserve-layout (window-minibuffer-p))
+            (get-mru-window) (selected-window))
       (zoom--update))))
 
 (defun zoom--update ()
