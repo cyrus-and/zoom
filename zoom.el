@@ -102,7 +102,7 @@ are not called."
 
 Otherwise, since the minibuffer cannot be zoomed, all the other
 windows are simply balanced.  Setting this variable to nil can be
-useful when third-party modes uses the minibuffer to display more
+useful when third-party modes use the minibuffer to display more
 than few lines."
   :type 'boolean
   :group 'zoom)
