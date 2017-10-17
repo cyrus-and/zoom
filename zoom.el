@@ -161,8 +161,8 @@ used when this function is called via `advice-add'."
               norecord)
     ;; check if should change `zoom--window' to the selected window
     (unless (and
-             ;; first time
-             zoom--window
+             ;; the first time or when the window is no more available (see #11)
+             (window-valid-p zoom--window)
              ;; when the selected window is the minibuffer, if requested
              zoom-minibuffer-preserve-layout
              (window-minibuffer-p (selected-window)))
