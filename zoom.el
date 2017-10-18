@@ -159,10 +159,12 @@ used when this function is called via `advice-add'."
               ;; selection happens
               norecord)
     ;; zoom the selected window or the most recently used one if the minibuffer
-    ;; is selected (according to the user preference)
+    ;; is selected (according to the user preference) or if there is a mouse
+    ;; tracking action in progress (the selected window will be zoomed after)
     (with-selected-window
-        (if (and zoom-minibuffer-preserve-layout (window-minibuffer-p))
-            (get-mru-window) (selected-window))
+        (if (or track-mouse
+                (and zoom-minibuffer-preserve-layout (window-minibuffer-p)))
+            (get-mru-window nil nil t) (selected-window))
       (zoom--update))))
 
 (defun zoom--update ()
