@@ -59,7 +59,7 @@ above."
                                (float :tag "Width ratio"))
                        (choice (integer :tag "Lines")
                                (float :tag "Height ratio"))))
-  :safe 'consp
+  :safe #'consp
   :group 'zoom)
 
 (defcustom zoom-ignored-major-modes nil
@@ -129,9 +129,9 @@ than few lines."
 (defun zoom--on ()
   "Enable hooks and advices and update the layout."
   ;; register the zoom handler
-  (add-hook 'window-size-change-functions 'zoom--handler)
-  (add-hook 'minibuffer-setup-hook 'zoom--handler)
-  (advice-add 'select-window :after 'zoom--handler)
+  (add-hook 'window-size-change-functions #'zoom--handler)
+  (add-hook 'minibuffer-setup-hook #'zoom--handler)
+  (advice-add 'select-window :after #'zoom--handler)
   ;; update the layout once loaded
   (dolist (frame (frame-list))
     (with-selected-frame frame
@@ -140,9 +140,9 @@ than few lines."
 (defun zoom--off ()
   "Disable hooks and advices and evenly balance the windows."
   ;; unregister the zoom handler
-  (remove-hook 'window-size-change-functions 'zoom--handler)
-  (remove-hook 'minibuffer-setup-hook 'zoom--handler)
-  (advice-remove 'select-window 'zoom--handler)
+  (remove-hook 'window-size-change-functions #'zoom--handler)
+  (remove-hook 'minibuffer-setup-hook #'zoom--handler)
+  (advice-remove 'select-window #'zoom--handler)
   ;; leave with a clean layout
   (dolist (frame (frame-list))
     (balance-windows frame)))
