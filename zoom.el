@@ -128,24 +128,26 @@ than few lines."
 
 (defun zoom--on ()
   "Enable hooks and advices and update the layout."
-  (add-hook 'window-size-change-functions 'zoom--hook-handler)
-  (advice-add 'select-window :after 'zoom--hook-handler)
-  (add-hook 'minibuffer-setup-hook 'zoom--hook-handler)
+  ;; register the zoom handler
+  (add-hook 'window-size-change-functions 'zoom--handler)
+  (add-hook 'minibuffer-setup-hook 'zoom--handler)
+  (advice-add 'select-window :after 'zoom--handler)
   ;; update the layout once loaded
   (dolist (frame (frame-list))
     (with-selected-frame frame
-      (zoom--hook-handler))))
+      (zoom--handler))))
 
 (defun zoom--off ()
   "Disable hooks and advices and evenly balance the windows."
-  (remove-hook 'window-size-change-functions 'zoom--hook-handler)
-  (remove-hook 'minibuffer-setup-hook 'zoom--hook-handler)
-  (advice-remove 'select-window 'zoom--hook-handler)
+  ;; unregister the zoom handler
+  (remove-hook 'window-size-change-functions 'zoom--handler)
+  (remove-hook 'minibuffer-setup-hook 'zoom--handler)
+  (advice-remove 'select-window 'zoom--handler)
   ;; leave with a clean layout
   (dolist (frame (frame-list))
     (balance-windows frame)))
 
-(defun zoom--hook-handler (&optional window norecord)
+(defun zoom--handler (&optional window norecord)
   "Handle an update event.
 
 WINDOW and NORECORD are according `select-window' and are only
