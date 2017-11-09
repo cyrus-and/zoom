@@ -163,7 +163,11 @@ is called via `advice-add'."
     ;; is selected (according to the user preference) or if there is a mouse
     ;; tracking action in progress (the selected window will be zoomed after)
     (with-selected-window
-        (if (or track-mouse
+        ;; XXX this is a workaround to the issue
+        ;; https://github.com/cyrus-and/zoom/issues/14 the drawback is that for
+        ;; Emacs < 26 starting a mouse selection in another window enlarges it
+        ;; immediately
+        (if (or (and (>= emacs-major-version 26) track-mouse)
                 (and zoom-minibuffer-preserve-layout (window-minibuffer-p)))
             (get-mru-window nil nil t) (selected-window))
       (zoom--update))))
