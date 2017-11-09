@@ -132,6 +132,10 @@ than few lines."
   (add-hook 'window-size-change-functions #'zoom--handler)
   (add-hook 'minibuffer-setup-hook #'zoom--handler)
   (advice-add 'select-window :after #'zoom--handler)
+  ;; disable mouse resizing
+  (advice-add 'mouse-drag-mode-line :override #'ignore)
+  (advice-add 'mouse-drag-vertical-line :override #'ignore)
+  (advice-add 'mouse-drag-header-line :override #'ignore)
   ;; update the layout once loaded
   (dolist (frame (frame-list))
     (with-selected-frame frame
@@ -143,6 +147,10 @@ than few lines."
   (remove-hook 'window-size-change-functions #'zoom--handler)
   (remove-hook 'minibuffer-setup-hook #'zoom--handler)
   (advice-remove 'select-window #'zoom--handler)
+  ;; enable mouse resizing
+  (advice-remove 'mouse-drag-mode-line #'ignore)
+  (advice-remove 'mouse-drag-vertical-line #'ignore)
+  (advice-remove 'mouse-drag-header-line #'ignore)
   ;; leave with a clean layout
   (dolist (frame (frame-list))
     (balance-windows frame)))
