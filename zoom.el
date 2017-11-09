@@ -147,11 +147,12 @@ than few lines."
   (dolist (frame (frame-list))
     (balance-windows frame)))
 
-(defun zoom--handler (&optional window norecord)
+(defun zoom--handler (&optional window-or-frame norecord)
   "Handle an update event.
 
-WINDOW and NORECORD are according `select-window' and are only
-used when this function is called via `advice-add'."
+WINDOW-OR-FRAME is the subject of the event and NORECORD is
+according to `select-window' and is only used when this function
+is called via `advice-add'."
   ;; filter according to the event that called this function
   (unless (or (not zoom-mode)
               ;; do not update if `select-window' is called with NORECORD set to
