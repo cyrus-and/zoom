@@ -131,3 +131,11 @@ the `temp-buffer-resize-mode` minor mode:
 (custom-set-variables
  '(temp-buffer-resize-mode t))
 ```
+
+### Why windows are resized even when they are ignored?
+
+When a window is ignored it is simply not resized when the user selects it.
+
+In order to maintain a *stable* layout, windows are always balanced, then the selected window, unless ignored, is zoomed according to the user preference.
+
+This may cause weird layouts with windows that are designed to be *small*, e.g., `imenu-list`. Unfortunately there is no universal solution to this.
