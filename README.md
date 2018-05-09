@@ -139,3 +139,5 @@ When a window is ignored it is simply not resized when the user selects it.
 In order to maintain a *stable* layout, windows are always balanced, then the selected window, unless ignored, is zoomed according to the user preference.
 
 This may cause weird layouts with windows that are designed to be *small*, e.g., `imenu-list`. Unfortunately there is no universal solution to this.
+
+A possible workaround is to set `window-size-fixed` to `t` for the buffers whose window must preserve the current size, but doing so causes the layout to not be balanced anymore.
