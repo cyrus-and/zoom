@@ -129,9 +129,7 @@ than few lines."
 (defun zoom--on ()
   "Enable hooks and advices and update the layout."
   ;; register the zoom handler
-  (add-hook 'window-size-change-functions #'zoom--handler)
-  (add-hook 'minibuffer-setup-hook #'zoom--handler)
-  (advice-add #'select-window :after #'zoom--handler)
+  (add-function :after pre-redisplay-function #'zoom--handler)
   ;; disable mouse resizing
   (advice-add #'mouse-drag-mode-line :override #'ignore)
   (advice-add #'mouse-drag-vertical-line :override #'ignore)
@@ -144,9 +142,7 @@ than few lines."
 (defun zoom--off ()
   "Disable hooks and advices and evenly balance the windows."
   ;; unregister the zoom handler
-  (remove-hook 'window-size-change-functions #'zoom--handler)
-  (remove-hook 'minibuffer-setup-hook #'zoom--handler)
-  (advice-remove #'select-window #'zoom--handler)
+  (remove-function pre-redisplay-function #'zoom--handler)
   ;; enable mouse resizing
   (advice-remove #'mouse-drag-mode-line #'ignore)
   (advice-remove #'mouse-drag-vertical-line #'ignore)
@@ -155,30 +151,50 @@ than few lines."
   (dolist (frame (frame-list))
     (balance-windows frame)))
 
-(defun zoom--handler (&optional window-or-frame norecord)
+(defvar zoom--last-window nil
+  "Keep track of the currently selected window.")
+
+(defun zoom--get-frame-snapshot ()
+  "Get a snapshot of the current frame.
+
+The return value is used to determine if an update is needed."
+  ;; the windows size is added to update the layout during the frame resize (XXX
+  ;; note that the simple frame size is not enough because for some reason it's
+  ;; not properly updated during maximize/restore operations); the mouse
+  ;; tracking invalidates the condition so it is possible to delay the update
+  ;; during a mouse tracking event; the list is converted to string to also
+  ;; compare the buffer (the order of the list places the selected window first)
+
+  ;; TODO adding the window sizes here causes one spurious update because first
+  ;; the selected window is changed then the resize happens
+  (format "%s" (list track-mouse
+                     (mapcar (lambda (window) (list window
+                                                    (window-total-width)
+                                                    (window-total-height)))
+                             (window-list)))))
+
+(defun zoom--handler (&optional ignored)
   "Handle an update event.
 
-WINDOW-OR-FRAME is the subject of the event and NORECORD is
-according to `select-window' and is only used when this function
-is called via `advice-add'."
-  ;; filter according to the event that called this function
-  (unless (or (not zoom-mode)
-              ;; do not update if `select-window' is called with NORECORD set to
-              ;; non-nil, that is, update only when a *meaningful* window
-              ;; selection happens
-              norecord)
-    ;; zoom the selected window or the most recently used one if the minibuffer
-    ;; is selected (according to the user preference) or if there is a mouse
-    ;; tracking action in progress (the selected window will be zoomed after)
-    (with-selected-window
-        ;; XXX this is a workaround to the issue
-        ;; https://github.com/cyrus-and/zoom/issues/14 the drawback is that for
-        ;; Emacs < 26 starting a mouse selection in another window enlarges it
-        ;; immediately
-        (if (or (and (>= emacs-major-version 26) track-mouse)
-                (and zoom-minibuffer-preserve-layout (window-minibuffer-p)))
-            (get-mru-window nil nil t) (selected-window))
-      (zoom--update))))
+Argument IGNORED is ignored."
+  ;; check if the windows have changed since the last time
+  (let ((snapshot (zoom--get-frame-snapshot)))
+    (unless (equal (frame-parameter nil 'zoom--frame-snapshot) snapshot)
+      ;; update the windows snapshot
+      (set-frame-parameter nil 'zoom--frame-snapshot snapshot)
+      ;; zoom the previously selected window if a mouse tracking is in progress
+      ;; of if the minibuffer is selected (according to the user preference)
+      (with-selected-window
+          (if (or (equal (selected-window) zoom--last-window)
+                  (and zoom-minibuffer-preserve-layout (window-minibuffer-p))
+                  track-mouse)
+              zoom--last-window
+            ;; XXX this can't be simply omitted because it's needed to address
+            ;; the case where a window changes buffer from/to a ignored buffer
+            (selected-window))
+        ;; update the currently zoomed window
+        (setq zoom--last-window (selected-window))
+        (zoom--update)))))
 
 (defun zoom--update ()
   "Update the window layout in the current frame."
