@@ -142,6 +142,17 @@ selected window, unless ignored, is zoomed according to the user preference.
 This may cause weird layouts with windows that are designed to be *small*, e.g.,
 `imenu-list`. Unfortunately there is no universal solution to this.
 
-A possible workaround is to set `window-size-fixed` to `t` for the buffers whose
-window must preserve the current size, but doing so causes the layout to not be
-balanced anymore.
+The workaround is to set `window-size-fixed` to `t` for the buffers whose window
+must preserve the current size, for example the following fixes the size of the
+[`imenu-list`] window to 30 columns:
+
+```el
+(defun my/fix-imenu-size ()
+  (with-selected-window (get-buffer-window "*Ilist*")
+    (setq window-size-fixed t)
+    (window-resize (selected-window) (- 30 (window-total-width)) t t)))
+
+(add-hook 'imenu-list-update-hook 'my/fix-imenu-size)
+```
+
+[`imenu-list`]: https://github.com/bmag/imenu-list
