@@ -216,7 +216,9 @@ Argument IGNORED is ignored."
     ;; check if the selected window is not ignored
     (unless (zoom--window-ignored-p)
       (zoom--resize)
-      (zoom--fix-scroll))))
+      ;; fix the scrolling but not for image buffers
+      (unless (derived-mode-p 'image-mode)
+        (zoom--fix-scroll)))))
 
 (defun zoom--window-ignored-p ()
   "Check whether the selected window will be ignored or not."
