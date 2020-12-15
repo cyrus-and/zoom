@@ -167,7 +167,7 @@ The return value is used to determine if an update is needed."
 
   ;; TODO adding the window sizes here causes one spurious update because first
   ;; the selected window is changed then the resize happens
-  (format "%s" (list track-mouse
+  (format "%s" (list (default-value 'track-mouse)
                      (mapcar (lambda (window) (list window
                                                     (window-total-width)
                                                     (window-total-height)))
@@ -187,7 +187,7 @@ Argument IGNORED is ignored."
       (with-selected-window
           (if (or (equal (selected-window) zoom--last-window)
                   (and zoom-minibuffer-preserve-layout (window-minibuffer-p))
-                  track-mouse)
+                  (default-value 'track-mouse))
               zoom--last-window
             ;; XXX this can't be simply omitted because it's needed to address
             ;; the case where a window changes buffer from/to a ignored buffer
