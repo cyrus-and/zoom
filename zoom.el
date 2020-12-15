@@ -107,13 +107,6 @@ than few lines."
   :type 'boolean
   :group 'zoom)
 
-(defcustom zoom-track-mouse-preserve-layout t
-  "Non-nil means that the layout is retained when the `track-mouse' is t.
-
-Otherwise, `track-mouse' is not taken into account."
-  :type 'boolean
-  :group 'zoom)
-
 ;;;###autoload
 (define-minor-mode zoom-mode
   "Perform `zoom' automatically as the selected window changes."
@@ -194,7 +187,7 @@ Argument IGNORED is ignored."
       (with-selected-window
           (if (or (equal (selected-window) zoom--last-window)
                   (and zoom-minibuffer-preserve-layout (window-minibuffer-p))
-                  (and zoom-track-mouse-preserve-layout track-mouse))
+                  track-mouse)
               zoom--last-window
             ;; XXX this can't be simply omitted because it's needed to address
             ;; the case where a window changes buffer from/to a ignored buffer
