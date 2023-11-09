@@ -267,7 +267,7 @@ resized horizontally or vertically."
          (window-size
           (if (floatp size-hint)
               (if horizontal (window-total-width) (window-total-height))
-            (if horizontal (window-body-width) (window-body-height))))
+            (if horizontal (zoom--window-body-width) (window-body-height))))
          ;; either use an absolute value or a ratio
          (min-window-size
           (if (floatp size-hint) (round (* size-hint frame-size)) size-hint))
@@ -277,6 +277,14 @@ resized horizontally or vertically."
          (delta (window-resizable nil desired-delta horizontal)))
     ;; actually resize the window
     (window-resize nil delta horizontal)))
+
+(defun zoom--window-body-width ()
+  "Get body width including margins."
+  (if-let (margins (window-margins))
+      (+ (window-body-width)
+	 (or (car margins) 0)
+	 (or (cdr margins) 0))
+    (window-body-width)))
 
 (defun zoom--fix-scroll ()
   "Fix the horizontal scrolling if needed."
