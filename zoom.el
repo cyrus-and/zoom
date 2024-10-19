@@ -65,7 +65,8 @@ above."
 (defcustom zoom-ignored-major-modes nil
   "List of ignored major modes.
 
-Selected windows using any of these major modes should not be
+Selected windows displaying a buffer with a major mode that is
+derived from any of these major modes should not be
 enlarged (only balanced)."
   :type '(repeat symbol)
   :group 'zoom)
@@ -228,8 +229,9 @@ Argument IGNORED is ignored."
    (frame-root-window-p (selected-window))
    ;; never attempt to zoom the minibuffer
    (window-minibuffer-p)
-   ;; check against the major mode
-   (member major-mode zoom-ignored-major-modes)
+   ;; check against the major mode (or its parents) (XXX this way of invoking
+   ;; `derived-mode-p' has been deprecated in Emacs 30 but it still works)
+   (apply 'derived-mode-p zoom-ignored-major-modes)
    ;; check against the buffer name
    (member (buffer-name) zoom-ignored-buffer-names)
    ;; check against the buffer name (using a regexp)
