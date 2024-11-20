@@ -212,8 +212,19 @@ Argument IGNORED is ignored."
         ;; make sure that the exact same amount of pixels is assigned to all the
         ;; siblings
         (window-resize-pixelwise t))
-    ;; start from a balanced layout anyway
+    ;; set the fixed size flag for all the ignored windows
+    (dolist (window (window-list))
+      (with-selected-window window
+        (when (zoom--window-ignored-p)
+          (set-window-parameter nil 'zoom-window-size-fixed window-size-fixed)
+          (setq window-size-fixed t))))
+    ;; start from a balanced layout
     (balance-windows)
+    ;; restore the fixed size flag
+    (dolist (window (window-list))
+      (with-selected-window window
+        (when (zoom--window-ignored-p)
+          (setq window-size-fixed (window-parameter nil 'zoom-window-size-fixed)))))
     ;; check if the selected window is not ignored
     (unless (zoom--window-ignored-p)
       (zoom--resize)
