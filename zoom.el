@@ -186,9 +186,10 @@ Argument IGNORED is ignored."
       ;; zoom the previously selected window if a mouse tracking is in progress
       ;; of if the minibuffer is selected (according to the user preference)
       (with-selected-window
-          (if (or (equal (selected-window) zoom--last-window)
-                  (and zoom-minibuffer-preserve-layout (window-minibuffer-p))
-                  (default-value 'track-mouse))
+          (if (and (window-valid-p zoom--last-window) ; might be deleted
+                   (or (equal (selected-window) zoom--last-window)
+                       (and zoom-minibuffer-preserve-layout (window-minibuffer-p))
+                       (default-value 'track-mouse)))
               zoom--last-window
             ;; XXX this can't be simply omitted because it's needed to address
             ;; the case where a window changes buffer from/to a ignored buffer
