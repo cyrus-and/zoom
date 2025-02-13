@@ -3,10 +3,7 @@
 
 # Zoom
 
-This minor mode takes care of managing the window sizes by enforcing a fixed and
-automatic balanced layout where the currently selected window is resized
-according to `zoom-size` which can be an absolute value in lines/columns, a
-ratio between the selected window and frame size or even a custom callback.
+This minor mode takes care of managing the window sizes by enforcing a fixed and automatic balanced layout where the currently selected window is resized according to `zoom-size` which can be an absolute value in lines/columns, a ratio between the selected window and frame size or even a custom callback.
 
 ![Screencast](https://i.imgur.com/joZxu56.gif)
 
@@ -34,8 +31,7 @@ M-x package-install-file RET /path/to/zoom.el
 
 ## Usage
 
-Enable Zoom with `M-x zoom-mode` otherwise use `M-x zoom` to manually rearrange
-windows just once.
+Enable Zoom with `M-x zoom-mode` otherwise use `M-x zoom` to manually rearrange windows just once.
 
 Load it automatically with:
 
@@ -67,8 +63,7 @@ Resize the selected window using the [golden ratio]:
 
 Resize the selected window according to the frame width, for example:
 
-- 90 columns and 75% of the frame height if the frame width is larger than 1024
-  pixels;
+- 90 columns and 75% of the frame height if the frame width is larger than 1024 pixels;
 - half the frame size otherwise.
 
 ```el
@@ -105,27 +100,19 @@ Prevent some windows from being resized, for example:
  '(zoom-ignore-predicates '((lambda () (> (count-lines (point-min) (point-max)) 20)))))
 ```
 
-(Please note that ignored windows are not resized when selected but all the
-windows are nevertheless arranged with `balance-windows`.)
+(Please note that ignored windows are not resized when selected but all the windows are nevertheless arranged with `balance-windows`.)
 
 ## FAQ
 
 ### What about [`golden-ratio.el`]?
 
-I have been a more or less happy [`golden-ratio.el`] user for some time when I
-stared noticing some bugs and sadly I discovered that it is apparently a dead
-project now, so I decided to write a new and improved minor mode from scratch
-that implements the same basic idea of automatic window layout as my first
-attempt at Emacs mode development.
+I have been a more or less happy [`golden-ratio.el`] user for some time when I stared noticing some bugs and sadly I discovered that it is apparently a dead project now, so I decided to write a new and improved minor mode from scratch that implements the same basic idea of automatic window layout as my first attempt at Emacs mode development.
 
 [`golden-ratio.el`]: https://github.com/roman/golden-ratio.el
 
 ### Why when there are several horizontal splits the completions buffer is very small?
 
-This happens when `zoom-minibuffer-preserve-layout` is non-`nil` (the default)
-because most of the space is probably occupied by the zoomed window. The
-solution (apart from setting the aforementioned variable to `nil`) is to enable
-the `temp-buffer-resize-mode` minor mode:
+This happens when `zoom-minibuffer-preserve-layout` is non-`nil` (the default) because most of the space is probably occupied by the zoomed window. The solution (apart from setting the aforementioned variable to `nil`) is to enable the `temp-buffer-resize-mode` minor mode:
 
 ```el
 (custom-set-variables
@@ -136,15 +123,11 @@ the `temp-buffer-resize-mode` minor mode:
 
 When a window is ignored it is simply not resized when the user selects it.
 
-In order to maintain a *stable* layout, windows are always balanced, then the
-selected window, unless ignored, is zoomed according to the user preference.
+In order to maintain a *stable* layout, windows are always balanced, then the selected window, unless ignored, is zoomed according to the user preference.
 
-This may cause weird layouts with windows that are designed to be *small*, e.g.,
-`imenu-list`. Unfortunately there is no universal solution to this.
+This may cause weird layouts with windows that are designed to be *small*, e.g., `imenu-list`. Unfortunately there is no universal solution to this.
 
-The workaround is to set `window-size-fixed` to `t` for the buffers whose window
-must preserve the current size, for example the following fixes the size of the
-[`imenu-list`] window to 30 columns:
+The workaround is to set `window-size-fixed` to `t` for the buffers whose window must preserve the current size, for example the following fixes the size of the [`imenu-list`] window to 30 columns:
 
 ```el
 (defun my/fix-imenu-size ()
