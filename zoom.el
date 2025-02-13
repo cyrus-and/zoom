@@ -62,6 +62,13 @@ above."
   :safe #'consp
   :group 'zoom)
 
+(defcustom zoom-use-total-window-size t
+  "If nil the window body only is used to compute the sizes.
+
+Otherwise also consider, margins, fringes, header line, etc."
+  :type 'boolean
+  :group 'zoom)
+
 (defcustom zoom-ignored-major-modes nil
   "List of ignored major modes.
 
@@ -268,7 +275,7 @@ resized horizontally or vertically."
          ;; use the total size (including fringes, scroll bars, etc.) for ratios
          ;; and the body size for absolute values
          (window-size
-          (if (floatp size-hint)
+          (if zoom-use-total-window-size
               (if horizontal (window-total-width) (window-total-height))
             (if horizontal (window-body-width) (window-body-height))))
          ;; either use an absolute value or a ratio
